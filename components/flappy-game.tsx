@@ -80,6 +80,7 @@ function drawBird(ctx: CanvasRenderingContext2D, state: GameState) {
   const y = state.birdY;
   const size = GAME.birdSize;
   const tilt = Math.max(-0.6, Math.min(0.9, state.velocity / 10));
+  const wing = Math.sin(state.frame / 4) * 5;
 
   ctx.save();
   ctx.translate(x + size / 2, y + size / 2);
@@ -92,7 +93,7 @@ function drawBird(ctx: CanvasRenderingContext2D, state: GameState) {
 
   ctx.fillStyle = "#ff922b";
   ctx.beginPath();
-  ctx.ellipse(-2, 4, size / 3.2, size / 4.5, -0.3, 0, Math.PI * 2);
+  ctx.ellipse(-4, wing * 0.3, size / 3.1, size / 4.2, -0.35 + wing * 0.04, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.fillStyle = "#fff";
@@ -160,11 +161,27 @@ export function FlappyGame() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    let lastScore = stateRef.current.score;
+
     const loop = () => {
       stateRef.current = step(stateRef.current);
+      if (
+        stateRef.current.status === "playing" &&
+        stateRef.current.score > lastScore
+      ) {
+        lastScore = stateRef.current.score;
+        if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+          try {
+            navigator.vibrate(12);
+          } catch {
+            // ignore
+          }
+        }
+      }
       if (stateRef.current.status === "playing") {
         syncUi();
       } else if (stateRef.current.status === "over") {
+        lastScore = 0;
         try {
           localStorage.setItem(BEST_KEY, String(stateRef.current.best));
         } catch {
