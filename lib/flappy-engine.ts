@@ -59,16 +59,25 @@ export function restart(best: number): GameState {
   return createInitialState(best);
 }
 
+function pipeSpeedForScore(score: number): number {
+  return GAME.pipeSpeed + Math.min(2.2, score * 0.08);
+}
+
+function spawnIntervalForScore(score: number): number {
+  return Math.max(72, GAME.pipeSpawnEvery - Math.floor(score * 1.2));
+}
+
 export function step(state: GameState): GameState {
   if (state.status !== "playing") return state;
 
   const velocity = state.velocity + GAME.gravity;
   const birdY = state.birdY + velocity;
-  let pipes = state.pipes.map((pipe) => ({ ...pipe, x: pipe.x - GAME.pipeSpeed }));
+  const speed = pipeSpeedForScore(state.score);
+  let pipes = state.pipes.map((pipe) => ({ ...pipe, x: pipe.x - speed }));
   let score = state.score;
   const frame = state.frame + 1;
 
-  if (frame % GAME.pipeSpawnEvery === 0) {
+  if (frame % spawnIntervalForScore(score) === 0) {
     pipes = [
       ...pipes,
       {

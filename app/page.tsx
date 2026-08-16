@@ -26,7 +26,22 @@ export default function HomePage() {
 
       <FlappyGame />
 
-      <footer className="mt-8 text-center text-sm text-muted-foreground">
+      <section className="mt-8 grid w-full max-w-[420px] gap-3 text-sm text-muted-foreground sm:grid-cols-3">
+        <div className="rounded-xl border border-border/80 bg-card/50 px-3 py-3 text-center">
+          <p className="font-semibold text-foreground">Flap</p>
+          <p className="mt-1">Tap, Space, or ↑</p>
+        </div>
+        <div className="rounded-xl border border-border/80 bg-card/50 px-3 py-3 text-center">
+          <p className="font-semibold text-foreground">Score</p>
+          <p className="mt-1">Pass pipes to earn points</p>
+        </div>
+        <div className="rounded-xl border border-border/80 bg-card/50 px-3 py-3 text-center">
+          <p className="font-semibold text-foreground">Pace</p>
+          <p className="mt-1">Speed rises as you score</p>
+        </div>
+      </section>
+
+      <footer className="mt-6 text-center text-sm text-muted-foreground">
         Controls: click / tap · Space · ↑ · Enter to restart
       </footer>
     </main>
